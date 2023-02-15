@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<id><![CDATA[Additional info feature for products]]></id>
+	<name><![CDATA[Additional info feature for products]]></name>
+	<code>knns-main-pdf-file-feature-for-products</code>
+	<version>1.0.0</version>
+	<author><![CDATA[kanenas.net (aka Nikolas Branis) - nbran@kanenas.net]]></author>
+	<link>https://kanenas.net/</link>
+	<file path="admin/language/el-gr/catalog/product.php">
+		<operation>
+			<search><![CDATA[// Entry]]></search>
+			<add position="after"><![CDATA[$_['entry_additional_info']         = 'Επιπλέον πληροφορία (i)';]]></add>
+		</operation>
+	</file>
+	<file path="admin/language/en-gb/catalog/product.php">
+		<operation>
+			<search><![CDATA[// Entry]]></search>
+			<add position="after"><![CDATA[$_['entry_additional_info']         = 'Additional info (i)';]]></add>
+		</operation>
+	</file>
+	<file path="admin/model/catalog/product.php">
+		<operation>
+			<search><![CDATA[location = '" . $this->db->escape($data['location']) . "',]]></search>
+			<add position="replace"><![CDATA[location = '" . $this->db->escape($data['location']) . "', additional_info = '" . $this->db->escape($data['additional_info']) . "',]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/catalog/product.php">
+		<operation>
+			<search><![CDATA[if (isset($this->request->post['minimum'])) {]]></search>
+			<add position="before"><![CDATA[
+		if (isset($this->request->post['additional_info'])) {
+			$data['additional_info'] = $this->request->post['additional_info'];
+		} elseif (!empty($product_info)) {
+			$data['additional_info'] = $product_info['additional_info'];
+		} else {
+			$data['additional_info'] = '';
+		}
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/view/template/catalog/product_form.twig">
+		<operation>
+			<search><![CDATA[<input type="text" name="location" value="{{ location }}" placeholder="{{ entry_location }}" id="input-location" class="form-control"/>]]></search>
+			<add position="after" offset="2"><![CDATA[
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-additional-info">{{ entry_additional_info }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="additional_info" value="{{ additional_info }}" placeholder="{{ entry_additional_info }}" id="input-additional-info" class="form-control"/>
+                </div>
+              </div>
+			]]></add>
+		</operation>
+	</file>
+</modification>
